@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central do Tempo — Recuperação de Português 5º ano (3º trimestre)</title>
+<style>
+:root{
+  --ceu:#2E86C1; --ceu-claro:#D6ECFA; --sol:#F4B400; --alerta:#FF7043;
+  --bom:#2EAF7D; --fundo:#F7FBFF; --papel:#FFFFFF; --tinta:#1F3245;
+  --cinza:#7B8C9E; --borda:#D9E6F2;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Verdana,sans-serif;background:var(--fundo);color:var(--tinta);font-size:17px;line-height:1.6}
+.wrap{max-width:940px;margin:0 auto;padding:16px}
+header{background:linear-gradient(160deg,#2E86C1,#5EB3E4);color:#fff;border-radius:0 0 26px 26px;padding:22px 16px 26px;text-align:center}
+header h1{margin:0 0 6px;font-size:1.6rem}
+header p{margin:4px 0;opacity:.95}
+.pingo{font-size:3rem;line-height:1;display:block;margin-bottom:4px}
+.badge{display:inline-block;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5);padding:4px 14px;border-radius:999px;font-weight:bold;font-size:.9rem;margin-top:8px}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0 10px}
+nav button{background:var(--papel);border:3px solid var(--borda);border-radius:16px;padding:10px 14px;font-size:1rem;font-weight:bold;color:var(--tinta);cursor:pointer;font-family:inherit}
+nav button:hover{border-color:var(--ceu)}
+nav button.on{background:var(--ceu);border-color:var(--ceu);color:#fff}
+nav button .mini{display:block;font-size:.72rem;font-weight:normal;opacity:.85}
+section{display:none}
+section.on{display:block}
+.card{background:var(--papel);border:3px solid var(--borda);border-radius:20px;padding:18px;margin:14px 0;box-shadow:0 3px 0 rgba(46,134,193,.07)}
+.card h2{margin:0 0 6px;font-size:1.3rem;color:var(--ceu)}
+.card h3{margin:14px 0 6px;font-size:1.08rem}
+.intro{background:var(--ceu-claro);border-color:#B9DCF3}
+.pill{border:3px solid var(--borda);border-radius:18px;padding:14px;margin:12px 0;background:#fff}
+.pill .tema{font-weight:bold;font-size:1.1rem;color:var(--ceu);margin-bottom:4px}
+.pill .regra{margin:6px 0}
+.pill .ex{background:#FFF8E1;border-left:6px solid var(--sol);border-radius:10px;padding:8px 12px;margin:8px 0}
+.pill .prova{background:#E8F7F0;border-left:6px solid var(--bom);border-radius:10px;padding:8px 12px;margin:8px 0}
+.pill .prova b{color:#1C7A56}
+.grupo{font-size:1.15rem;font-weight:bold;background:var(--sol);color:#4A3200;display:inline-block;padding:5px 16px;border-radius:999px;margin:18px 0 2px}
+.q{border-top:2px dashed var(--borda);padding-top:12px;margin-top:12px}
+.q:first-of-type{border-top:0}
+.q .enun{font-weight:bold;margin-bottom:8px}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{text-align:left;background:#fff;border:3px solid var(--borda);border-radius:14px;padding:10px 12px;cursor:pointer;font-family:inherit;font-size:1rem;color:var(--tinta)}
+.opt:hover:enabled{border-color:var(--ceu);background:#F2F9FE}
+.opt:disabled{cursor:default;opacity:.95}
+.opt .letra{display:inline-block;font-weight:bold;color:var(--ceu);width:24px}
+.opt.certa{background:#E8F7F0;border-color:var(--bom)}
+.opt.errada{background:#FFEDE7;border-color:var(--alerta)}
+.fb{margin-top:8px;border-radius:12px;padding:9px 12px;font-size:.96rem}
+.fb.ok{background:#E8F7F0;border-left:6px solid var(--bom)}
+.fb.no{background:#FFEDE7;border-left:6px solid var(--alerta)}
+.btn{background:var(--ceu);color:#fff;border:0;border-radius:14px;padding:12px 20px;font-size:1.02rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 3px 0 #1B5E87}
+.btn:hover{filter:brightness(1.07)}
+.btn.sol{background:var(--sol);color:#4A3200;box-shadow:0 3px 0 #B98900}
+.btn.ghost{background:#fff;color:var(--ceu);border:3px solid var(--ceu);box-shadow:none}
+.center{text-align:center}
+.resultado{display:none;margin-top:16px}
+.resultado.on{display:block}
+.termo-linha{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--borda);padding:8px 0;flex-wrap:wrap}
+.termo-linha .nome{flex:1;min-width:190px;font-weight:bold}
+.tag{font-size:.84rem;font-weight:bold;padding:3px 11px;border-radius:999px;white-space:nowrap}
+.tag.ok{background:#E8F7F0;color:#1C7A56;border:2px solid var(--bom)}
+.tag.at{background:#FFEDE7;color:#B23C17;border:2px solid var(--alerta)}
+.flipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:10px}
+.flip{height:160px;perspective:900px;cursor:pointer}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.v .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.95rem;border:3px solid}
+.flip .f{background:#FFF3E0;border-color:var(--alerta);font-weight:bold}
+.flip .b{background:#fff;border-color:var(--bom);transform:rotateY(180deg)}
+.flip .f small{display:block;color:var(--cinza);font-weight:normal;margin-top:6px}
+.radar{background:#FFF8E1;border-color:#F3D98A}
+.radar .frase{font-size:1.25rem;font-weight:bold;margin:10px 0;text-align:center}
+.radar .escolhas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.radar .escolhas button{min-width:110px}
+.placar{font-weight:bold;color:var(--ceu);text-align:center;margin-top:10px}
+.barra{background:var(--ceu-claro);border-radius:999px;height:16px;overflow:hidden;margin:8px 0}
+.barra div{background:var(--bom);height:100%;width:0;transition:width .4s}
+.nivel{display:inline-block;font-size:.8rem;font-weight:bold;padding:3px 10px;border-radius:999px;margin-left:6px}
+.nivel.f{background:#E8F7F0;color:#1C7A56}
+.nivel.m{background:#FFF8E1;color:#8A6400}
+.nivel.p{background:#FFEDE7;color:#B23C17}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+th,td{border:2px solid var(--borda);padding:7px 9px;text-align:left}
+th{background:var(--ceu-claro)}
+.plano li{margin-bottom:6px}
+.pais{background:#F0F4F8;border-color:#C9D7E4}
+.pais input{font-size:1rem;padding:9px 12px;border:3px solid var(--borda);border-radius:12px;font-family:inherit;width:150px}
+.aviso{font-size:.92rem;color:var(--cinza)}
+footer{text-align:center;color:var(--cinza);font-size:.88rem;padding:18px 10px 34px}
+@media(max-width:600px){
+  body{font-size:16px}
+  nav button{padding:8px 10px;font-size:.92rem}
+  header h1{font-size:1.32rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="pingo">🌦️</span>
+  <h1>Central do Tempo</h1>
+  <p><b>Recuperação de Português — 5º ano · 3º trimestre</b></p>
+  <p>Colégio Coração Feliz · Phases Língua Portuguesa 5</p>
+  <span class="badge">☂️ Um dia para prever o tempo e garantir o sol na prova</span>
+</header>
+
+<div class="wrap">
+
+<nav>
+  <button class="on" data-tab="t1" onclick="aba('t1',this)">🌡️ Termômetro<span class="mini">onde estou?</span></button>
+  <button data-tab="t2" onclick="aba('t2',this)">☀️ Previsão Fácil<span class="mini">entender rápido</span></button>
+  <button data-tab="t3" onclick="aba('t3',this)">⛈️ Alerta<span class="mini">pegadinhas</span></button>
+  <button data-tab="t4" onclick="aba('t4',this)">🎯 Treino<span class="mini">nível prova</span></button>
+  <button data-tab="t5" onclick="aba('t5',this)">📋 Boletim Final<span class="mini">simulado</span></button>
+</nav>
+
+<!-- ================= TERMÔMETRO ================= -->
+<section id="t1" class="on">
+  <div class="card intro">
+    <h2>🌡️ Termômetro — 13 perguntas, uma de cada assunto</h2>
+    <p>Olá, jovem aprendiz! Eu sou o <b>Pingo</b>, da Central do Tempo. ☔</p>
+    <p>Antes de estudar tudo, vamos <b>medir o tempo</b>: uma pergunta de cada assunto do trimestre. No fim eu mostro onde está <b>sol</b> (você já sabe) e onde está <b>chuva</b> (precisa estudar primeiro). Assim você não perde tempo com o que já domina.</p>
+    <p class="aviso">Responda sem pesquisar — é só uma medição, errar aqui ajuda.</p>
+  </div>
+  <div class="card" id="termoBox"></div>
+  <div class="card resultado" id="termoRes"></div>
+
+  <div class="card">
+    <h2>🗓️ Plano de um dia</h2>
+    <ol class="plano">
+      <li><b>Agora:</b> Termômetro (10 min) — descubra onde está a chuva.</li>
+      <li><b>Depois:</b> Previsão Fácil (25 min) — leia primeiro os assuntos marcados com ⚠️.</li>
+      <li><b>Em seguida:</b> Alerta (15 min) — vire os cartões e jogue o Radar duas vezes.</li>
+      <li><b>Então:</b> Treino (25 min) — exercícios nível prova.</li>
+      <li><b>Por último:</b> Boletim Final (30 min) — o simulado de 20 questões.</li>
+    </ol>
+    <p class="aviso">Se o tempo acabar, o que mais vale a pena é: Previsão dos assuntos ⚠️ → Radar → Boletim Final.</p>
+  </div>
+</section>
+
+<!-- ================= PREVISÃO ================= -->
+<section id="t2">
+  <div class="card intro">
+    <h2>☀️ Previsão Fácil — o trimestre em pílulas curtas</h2>
+    <p>Cada pílula tem <b>a regra</b>, <b>um exemplo</b> e a caixinha <b>“Como costuma cair na prova”</b>. Se você já fez o Termômetro, os assuntos para estudar primeiro aparecem com <b>⚠️</b>.</p>
+  </div>
+  <div id="previsaoBox"></div>
+  <div class="card">
+    <h2>🗂️ De onde veio cada assunto</h2>
+    <table>
+      <tr><th>Assunto</th><th>Unidade do livro</th></tr>
+      <tr><td>Gênero mito</td><td>Unidade 6 (p. 194)</td></tr>
+      <tr><td>Conjunções</td><td>Unidade 6 (p. 182-187)</td></tr>
+      <tr><td>Os 4 porquês</td><td>Unidade 6 (p. 188-192)</td></tr>
+      <tr><td>Modos, tempos e conjugações</td><td>Unidade 7 (p. 16-25)</td></tr>
+      <tr><td>Tem/Têm e Vem/Vêm</td><td>Unidade 7 (p. 26-28)</td></tr>
+      <tr><td>Artigo de opinião e poema</td><td>Unidade 7 (p. 33)</td></tr>
+      <tr><td>Grau do adjetivo, parônimos, adjetivos pátrios, regulamento</td><td>revisão do caderno</td></tr>
+      <tr><td>Gerúndio e gerundismo</td><td>Unidade 8 (p. 52-55)</td></tr>
+      <tr><td>Indicativo e subjuntivo</td><td>Unidade 9 (p. 79-82)</td></tr>
+      <tr><td>Sessão / Seção / Cessão</td><td>Unidade 9 (p. 88-90)</td></tr>
+      <tr><td>Crônica</td><td>Unidade 9 (p. 96)</td></tr>
+      <tr><td>Advérbio e locução adverbial</td><td>Unidade 10 (p. 107-113)</td></tr>
+      <tr><td>Atrás / Trás / Traz</td><td>Unidade 10 (p. 117-120)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ================= ALERTA ================= -->
+<section id="t3">
+  <div class="card intro">
+    <h2>⛈️ Alerta de Tempestade — os erros que mais derrubam nota</h2>
+    <p><b>Clique no cartão</b> para virar e ver como não cair na pegadinha.</p>
+  </div>
+  <div class="card">
+    <div class="flipgrid" id="flipBox"></div>
+  </div>
+
+  <div class="card radar">
+    <h2>📡 Radar dos Parecidos — treino rápido</h2>
+    <p>Metade da prova é palavra parecida. Aqui a frase aparece e você escolhe a palavra certa. São 12 rodadas e <b>pode repetir quantas vezes quiser</b> — a ordem muda sempre.</p>
+    <div id="radarBox"></div>
+    <div class="placar" id="radarPlacar"></div>
+    <div class="center" style="margin-top:12px"><button class="btn sol" onclick="radarStart()">🔄 Jogar o Radar</button></div>
+  </div>
+</section>
+
+<!-- ================= TREINO ================= -->
+<section id="t4">
+  <div class="card intro">
+    <h2>🎯 Treino — por família de assunto</h2>
+    <p>Os 13 assuntos foram juntados em <b>6 famílias</b>. Em cada uma os exercícios sobem de nível: <span class="nivel f">fácil</span> <span class="nivel m">médio</span> <span class="nivel p">nível prova</span>.</p>
+  </div>
+  <div id="treinoBox"></div>
+</section>
+
+<!-- ================= SIMULADO ================= -->
+<section id="t5">
+  <div class="card intro">
+    <h2>📋 Boletim Final — simulado de 20 questões</h2>
+    <p>Marque uma resposta em cada questão e clique em <b>Enviar boletim</b> no fim. O <b>gabarito comentado só aparece depois de enviar</b> — é assim que vale como treino de verdade.</p>
+    <p class="aviso">Tudo que está aqui saiu dos dois kits do trimestre. Não há interpretação de texto longa, como na revisão.</p>
+  </div>
+  <div class="card" id="simBox"></div>
+  <div class="center" style="margin:16px 0"><button class="btn" id="simBtn" onclick="simEnviar()">✅ Enviar boletim</button></div>
+  <div class="card resultado" id="simRes"></div>
+</section>
+
+<!-- ================= PAIS ================= -->
+<div class="card pais">
+  <h2>👨‍👩‍👧 Relatório dos pais</h2>
+  <p>Digite o código dos pais para ver o resultado de cada parte.</p>
+  <p><input id="codPais" type="text" placeholder="código" autocomplete="off">
+  <button class="btn ghost" onclick="verRelatorio()">Ver relatório</button></p>
+  <div id="relBox"></div>
+  <p class="aviso" style="margin-top:14px">O progresso fica salvo neste navegador. <button class="btn ghost" style="padding:6px 12px;font-size:.9rem" onclick="limparKit()">🧹 Limpar só este kit</button></p>
+</div>
+
+<footer>
+  Central do Tempo · Recuperação de Português 5º ano · 3º trimestre<br>
+  Feito a partir dos kits das Unidades 6-7 (Mensal 1) e 8-10 (Mensal 2) · Phases Língua Portuguesa 5
+</footer>
+</div>
+
+<script>
+/* ===================== ARMAZENAMENTO ===================== */
+var PFX='port5_rec3tri_';
+var mem={};
+function carregar(){try{var r=localStorage.getItem(PFX+'dados');if(r)mem=JSON.parse(r)||{};}catch(e){mem=window.__mem||{};}}
+function salvar(){try{localStorage.setItem(PFX+'dados',JSON.stringify(mem));}catch(e){window.__mem=mem;}}
+function limparKit(){
+  try{
+    var apagar=[];
+    for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf(PFX)===0)apagar.push(k);}
+    apagar.forEach(function(k){localStorage.removeItem(k);});
+  }catch(e){}
+  mem={};window.__mem={};
+  document.getElementById('relBox').innerHTML='<div class="fb ok">Pronto! Só os dados deste kit foram apagados. Recarregue a página para começar de novo.</div>';
+}
+carregar();
+
+/* ===================== ASSUNTOS ===================== */
+var ASSUNTOS=[
+ {id:'adj',nome:'Adjetivo e grau do adjetivo'},
+ {id:'conj',nome:'Conjunções'},
+ {id:'modo',nome:'Modos verbais'},
+ {id:'cjg',nome:'Conjugações (-ar, -er, -ir)'},
+ {id:'ger',nome:'Gerúndio e gerundismo'},
+ {id:'adv',nome:'Advérbio e locução adverbial'},
+ {id:'pq',nome:'Os 4 porquês'},
+ {id:'tv',nome:'Tem/Têm e Vem/Vêm'},
+ {id:'ssc',nome:'Sessão / Seção / Cessão'},
+ {id:'tta',nome:'Traz / Trás / Atrás'},
+ {id:'par',nome:'Parônimos'},
+ {id:'gen',nome:'Gêneros: mito, artigo de opinião, poema, regulamento'},
+ {id:'cro',nome:'Gênero crônica'}
+];
+
+/* ===================== TERMÔMETRO ===================== */
+var TERMO=[
+ {as:'adj',q:'A frase “O pinheiro é tão alto quanto a torre” mostra o grau...',o:['comparativo de igualdade','comparativo de superioridade','superlativo','nenhum grau'],a:0,e:'“Tão... quanto” é o comparativo de IGUALDADE. “Mais... que” seria superioridade.'},
+ {as:'conj',q:'Em “Estudei bastante, mas não terminei a prova”, a conjunção “mas” indica...',o:['adição (soma)','adversidade (oposição)','conclusão','tempo'],a:1,e:'Mas, porém, contudo e todavia mostram oposição (adversidade).'},
+ {as:'modo',q:'Em “Tomara que ele ganhe o ingresso!”, o verbo está no modo...',o:['indicativo','imperativo','subjuntivo','infinitivo'],a:2,e:'“Tomara que” mostra desejo, então o verbo fica no subjuntivo: ganhe.'},
+ {as:'cjg',q:'O verbo “sorrir” pertence a qual conjugação?',o:['1ª (-ar)','2ª (-er)','3ª (-ir)','não tem conjugação'],a:2,e:'Sorrir termina em -IR: 3ª conjugação. Falar é 1ª (-ar) e correr é 2ª (-er).'},
+ {as:'ger',q:'Qual frase é exemplo de GERUNDISMO (uso errado)?',o:['“As crianças estão brincando no parque agora.”','“Vamos estar enviando o seu pedido amanhã.”','“Ela saiu correndo para a escola.”','“Estou lendo um livro muito legal.”'],a:1,e:'“Vamos estar enviando” é gerundismo. O certo é “vamos enviar”.'},
+ {as:'adv',q:'Em “Ela chegou cedo à escola”, a palavra “cedo” é advérbio de...',o:['lugar','modo','tempo','negação'],a:2,e:'“Cedo” indica QUANDO a ação aconteceu: advérbio de tempo.'},
+ {as:'pq',q:'Complete: “______ você não estudou?” (começo de pergunta)',o:['Por que','Porque','Porquê','Por quê'],a:0,e:'No começo da pergunta: por que (separado e sem acento).'},
+ {as:'tv',q:'Complete: “Os alunos ______ prova amanhã.”',o:['tem','têm','têem','tém'],a:1,e:'Muitos (eles) = têm, com acento circunflexo. Um só (ele) = tem.'},
+ {as:'ssc',q:'Complete: “Comprei pão na ______ de padaria do mercado.”',o:['sessão','cessão','seção','sesão'],a:2,e:'Parte ou divisão de um lugar = seção.'},
+ {as:'tta',q:'Complete: “Toda manhã, o padeiro ______ pães quentinhos.”',o:['trás','atrás','traz','tras'],a:2,e:'É o verbo trazer no presente: ele traz (com Z).'},
+ {as:'par',q:'Complete: “O ______ da ponte é de 300 metros.”',o:['cumprimento','comprimento','comprimente','cumpримento'],a:1,e:'Comprimento é medida. Cumprimento é saudação. São parônimos!'},
+ {as:'gen',q:'Qual é a estrutura típica do artigo de opinião?',o:['título → rima → estrofe','ingredientes → modo de fazer','introdução → argumentos → conclusão','início → meio → moral da história'],a:2,e:'O artigo de opinião se organiza em introdução, argumentos e conclusão.'},
+ {as:'cro',q:'Qual é um assunto típico de uma crônica?',o:['um fato simples do dia a dia','uma lista de fórmulas de matemática','as regras completas de um jogo','uma receita de bolo'],a:0,e:'A crônica é uma narrativa curta sobre fatos do cotidiano, em linguagem simples.'}
+];
+
+/* ===================== PREVISÃO (pílulas) ===================== */
+var PREVISAO=[
+ {g:'Gramática'},
+ {as:'adj',em:'⭐',t:'Adjetivo e grau do adjetivo',
+  r:'O grau do adjetivo compara. <b>Comparativo:</b> igualdade (tão... quanto), superioridade (mais... que), inferioridade (menos... que). <b>Superlativo:</b> aumenta bastante (lindíssima, muito veloz). Alguns adjetivos vêm de locuções: festa <i>de família</i> → festa <b>familiar</b>; dor <i>de dentista</i> → dor <b>dentária</b>; vida <i>da cidade</i> → vida <b>urbana</b>. E os <b>adjetivos pátrios</b> mostram o lugar de origem: brasileiro, paulista.',
+  ex:'limpa → limp<b>íssima</b> · rápido → rapid<b>íssimo</b> · linda → lind<b>íssima</b>',
+  p:'A prova dá uma frase e pergunta <b>qual grau</b> é. Decore as marcas: “tão... quanto” = igualdade; “mais... que” = superioridade; terminação <b>-íssimo</b> = superlativo.'},
+ {as:'conj',em:'🔗',t:'Conjunções: as pontes que ligam ideias',
+  r:'A conjunção liga frases ou partes de uma frase, e o sentido muda conforme a que você usa. As 7 famílias: <b>adição</b> (e, nem, não só... mas também) · <b>adversidade/oposição</b> (mas, porém, contudo, todavia, entretanto, no entanto) · <b>alternância/escolha</b> (ou, ora... ora) · <b>conclusão</b> (logo, por isso, portanto, assim) · <b>finalidade</b> (para, para que, a fim de que) · <b>tempo</b> (quando, assim que, antes que, depois que) · <b>explicação/causa</b> (porque, pois, como, já que).',
+  ex:'Ele joga futebol <b>e</b> basquete. (soma) · Estudei, <b>mas</b> não terminei. (oposição) · Estava cansado, <b>portanto</b> fui dormir. (conclusão) · Não fui <b>porque</b> chovia. (causa)',
+  p:'A prova dá a frase e pede a <b>ideia</b> que a conjunção passa. Descubra o sentido dela na frase antes de responder.'},
+ {as:'modo',em:'🎭',t:'Modos verbais: indicativo, subjuntivo, imperativo',
+  r:'Verbo mostra ação (correr), estado (ser, estar) ou fenômeno da natureza (chover). São <b>3 modos</b>: <b>indicativo</b> = certeza (Eu estou no circo) · <b>subjuntivo</b> = dúvida ou desejo (Tomara que ele ganhe! / Se eu pudesse...) · <b>imperativo</b> = ordem ou pedido (Venha logo, por favor!). Tempos: passado, presente e futuro.',
+  ex:'Indicativo: cantei, canto, cantarei. Subjuntivo: se eu cantasse, que eu cante, quando eu cantar.',
+  p:'As palavrinhas <b>se, que, quando, talvez e tomara que</b> são pistas de subjuntivo. Se a frase afirma com certeza, é indicativo.'},
+ {as:'cjg',em:'🔢',t:'Conjugações e infinitivo',
+  r:'A forma não conjugada do verbo é o <b>infinitivo</b>, que termina em -ar, -er ou -ir. <b>1ª conjugação</b> = -AR (falar) · <b>2ª conjugação</b> = -ER (correr) · <b>3ª conjugação</b> = -IR (sorrir). O verbo também muda conforme a <b>pessoa</b>: eu, tu, ele (singular) · nós, vós, eles (plural).',
+  ex:'falar = 1ª · correr = 2ª · sorrir = 3ª',
+  p:'A prova dá um verbo no infinitivo e pede a conjugação. Olhe só as <b>duas últimas letras</b>.'},
+ {as:'ger',em:'🏃',t:'Gerúndio e gerundismo',
+  r:'O <b>gerúndio</b> mostra uma ação em andamento, que ainda não terminou, e termina sempre em <b>-NDO</b>: cantar → cantando; tremer → tremendo; partir → partindo. O <b>gerundismo</b> é o uso errado, que virou modismo: “vamos estar entrando em contato”. O certo é mais simples: “vamos entrar em contato”. Atenção: o gerúndio <b>não é proibido</b> — está certo sempre que a ação estiver mesmo acontecendo.',
+  ex:'Certo: “A cigarra leva a vida <b>cantando</b>.” · Errado: “Vamos <b>estar participando</b> da campanha.”',
+  p:'A prova mostra 4 frases e pergunta <b>qual é o gerundismo</b>. Procure a dupla “estar + verbo em -ndo” onde dava para usar um verbo simples.'},
+ {as:'adv',em:'🧭',t:'Advérbio e locução adverbial',
+  r:'O <b>advérbio</b> acompanha o verbo e mostra a circunstância: <b>tempo</b> (agora, hoje, cedo, sempre) · <b>lugar</b> (aqui, ali, longe) · <b>intensidade</b> (muito) · <b>modo</b> (bem) · <b>negação</b> (não) · <b>afirmação</b> (certamente). O advérbio é <b>invariável</b>: não tem masculino, feminino nem plural. A <b>locução adverbial</b> são duas ou mais palavras com valor de advérbio.',
+  ex:'“com certeza” = certamente · “todo dia” = diariamente · “de verdade” = verdadeiramente',
+  p:'Duas perguntas certíssimas: <b>de que tipo</b> é o advérbio (tempo? lugar? modo?) e o que significa <b>invariável</b>.'},
+ {g:'Ortografia — as palavras parecidas'},
+ {as:'pq',em:'❓',t:'Os 4 porquês',
+  r:'<b>POR QUE</b> (separado, sem acento) = começo de pergunta. <b>POR QUÊ</b> (separado, com acento) = fim de pergunta. <b>PORQUE</b> (junto, sem acento) = resposta/explicação, é o mesmo que “pois”. <b>PORQUÊ</b> (junto, com acento) = substantivo, quer dizer “o motivo”, e vem depois do artigo <b>o</b>.',
+  ex:'<b>Por que</b> você não veio? · Você não veio <b>por quê</b>? · Não fui <b>porque</b> estava doente. · Não sei <b>o porquê</b> disso.',
+  p:'O segredo é olhar duas coisas: é <b>pergunta ou resposta</b>, e está no <b>começo ou no fim</b>. Viu o artigo “o” antes? É o porquê, junto e com acento.'},
+ {as:'tv',em:'✍️',t:'Tem/Têm e Vem/Vêm',
+  r:'Os verbos <b>ter</b> e <b>vir</b> ganham acento circunflexo (^) na 3ª pessoa do <b>plural</b>. Uma pessoa (ele/ela) = tem, vem (sem acento). Várias (eles/elas) = <b>têm, vêm</b> (com acento).',
+  ex:'Ela tem talento → Elas <b>têm</b> talento. · Ela sempre vem aqui → Elas sempre <b>vêm</b> aqui.',
+  p:'Conte quantos são! A prova adora frase com sujeito no plural para ver se você põe o chapeuzinho ^.'},
+ {as:'ssc',em:'🏷️',t:'Sessão / Seção / Cessão',
+  r:'Mesmo som, escritas e sentidos diferentes. <b>Sessão</b> = tempo de uma atividade (sessão de cinema). <b>Seção</b> = parte ou divisão de um todo (seção da loja). <b>Cessão</b> = ato de ceder, de transferir algo.',
+  ex:'Perdemos a <b>sessão</b> das 16h. · Comprei pão na <b>seção</b> de padaria. · A <b>cessão</b> do terreno foi assinada.',
+  p:'Pense no <b>sentido</b> da frase: é horário de espetáculo, é pedaço de um lugar, ou é alguém cedendo algo?'},
+ {as:'tta',em:'↩️',t:'Traz / Trás / Atrás',
+  r:'<b>Traz</b> (com Z) = verbo trazer, significa levar ou transportar. <b>Trás</b> (com S) = direção, e vem <b>sempre</b> com as preposições de, para ou por. <b>Atrás</b> = lugar ou posição, e <b>não</b> precisa de preposição.',
+  ex:'Ele <b>traz</b> novidades todo dia. · Ela olhou <b>para trás</b>. · O gato se escondeu <b>atrás</b> do sofá.',
+  p:'Dica rápida: tem Z? é o verbo (ele traz). Tem de/para/por antes? é trás. Está sozinho indicando lugar? é atrás. E “para atrás” está <b>errado</b>.'},
+ {as:'par',em:'👯',t:'Parônimos',
+  r:'<b>Parônimos</b> são palavras de escrita e som parecidos, mas com <b>sentidos diferentes</b>. Os campeões da prova: <b>comprimento</b> (medida, tamanho) × <b>cumprimento</b> (saudação); <b>calda</b> (do doce) × <b>cauda</b> (o rabo do animal).',
+  ex:'O <b>comprimento</b> da ponte é de 300 metros. · Ele me deu um <b>cumprimento</b> simpático. · Calda de chocolate × cauda do cavalo.',
+  p:'A prova dá a frase com lacuna e duas palavras quase iguais. Leia o <b>sentido</b> da frase: é medida ou é cumprimentar alguém?'},
+ {g:'Gêneros textuais'},
+ {as:'gen',em:'🏛️',t:'Mito',
+  r:'O <b>mito</b> é uma história inventada para explicar alguma coisa: como o mundo surgiu, os fenômenos da natureza ou características das pessoas. É um texto <b>narrativo</b>, escrito em <b>3ª pessoa</b>, cheio de elementos fantásticos e símbolos, e mostra a cultura de um povo.',
+  ex:'O mito de Héstia, lido na Unidade 6, é de origem <b>grega</b> e está ligado ao fogo e ao lar.',
+  p:'Perguntam <b>para que serve</b> o mito, <b>em que pessoa</b> é escrito e a <b>origem</b> do mito de Héstia.'},
+ {as:'gen',em:'🗣️',t:'Artigo de opinião e poema',
+  r:'O <b>artigo de opinião</b> expõe o ponto de vista do autor sobre um tema polêmico, usando <b>argumentos</b> para convencer, e se organiza em <b>introdução → argumentos → conclusão</b>. O <b>poema</b> expressa sentimentos: cada linha é um <b>verso</b>, um grupo de versos é uma <b>estrofe</b>, e a <b>rima</b> são sons parecidos no fim dos versos — mas nem todo poema precisa rimar.',
+  ex:'telhado / sentado <b>rimam</b>. · No artigo, o autor não só conta um fato: ele defende uma ideia.',
+  p:'Decore: verso = linha, estrofe = conjunto de versos. E cuidado: dizer que “todo poema rima” é <b>errado</b>.'},
+ {as:'gen',em:'📜',t:'Regulamento',
+  r:'O <b>regulamento</b> usa linguagem <b>formal</b>, está na <b>3ª pessoa</b>, tem <b>parágrafos numerados</b> e as frases <b>começam com verbos</b>.',
+  ex:'“1. Entregar o trabalho até o dia 10.” “2. Usar caneta azul ou preta.”',
+  p:'A prova mostra um trecho e pergunta qual gênero é, ou qual característica é do regulamento.'},
+ {as:'cro',em:'📰',t:'Crônica',
+  r:'A <b>crônica</b> é uma narrativa <b>curta</b> sobre fatos do <b>dia a dia</b>, com linguagem <b>simples e informal</b>, que mostra as opiniões do autor. Pode ser <b>humorística, crítica, reflexiva ou irônica</b>.',
+  ex:'Uma crônica sobre a fila do mercado, sobre o ônibus que atrasou, sobre o cachorro do vizinho.',
+  p:'Perguntam o <b>assunto</b> (dia a dia), a <b>linguagem</b> (simples e informal) e o <b>caráter</b> (humorístico, crítico, reflexivo ou irônico).'}
+];
+
+/* ===================== PEGADINHAS ===================== */
+var PEGADINHAS=[
+ {f:'mas × mais',b:'<b>Mas</b> = porém (oposição). <b>Mais</b> = o contrário de menos (quantidade).'},
+ {f:'“Por que” junto no começo da pergunta',b:'No começo é <b>sempre separado</b>: “Por que...?”'},
+ {f:'Esquecer o acento no fim da pergunta',b:'No fim da pergunta leva acento: “Você não veio <b>por quê</b>?”'},
+ {f:'Pôr acento no “porque” da resposta',b:'A resposta é <b>porque</b>: junto e SEM acento.'},
+ {f:'“Tomara que” com indicativo',b:'“Tomara que”, “se” e “talvez” pedem o <b>subjuntivo</b>: tomara que ele <b>ganhe</b>.'},
+ {f:'Esquecer o ^ no plural',b:'Eles <b>têm</b> e <b>vêm</b> levam acento circunflexo. Ele tem e vem, não.'},
+ {f:'Achar que mito é notícia real',b:'O mito é uma história <b>simbólica</b> que explica algo, não um fato real.'},
+ {f:'comprimento × cumprimento',b:'<b>Comprimento</b> = medida. <b>Cumprimento</b> = saudação. São parônimos!'},
+ {f:'Achar que todo poema rima',b:'<b>Nem todo poema tem rima.</b> Verso é a linha; estrofe é o grupo de versos.'},
+ {f:'calda × cauda',b:'<b>Calda</b> é do doce. <b>Cauda</b> é o rabo do animal.'},
+ {f:'Confundir gerúndio com outros tempos',b:'O gerúndio termina em <b>-ndo</b> (cantando). Cantará é futuro, cantou é passado.'},
+ {f:'Achar que o gerúndio é proibido',b:'Gerundismo é o uso errado (“vou estar enviando”). O gerúndio em si <b>está correto</b> quando a ação está acontecendo.'},
+ {f:'“-íssimo” não é superlativo?',b:'<b>É sim!</b> Terminação -íssimo = grau <b>superlativo</b>: rapidíssimo, lindíssima.'},
+ {f:'Pôr o advérbio no plural',b:'O advérbio é <b>invariável</b>: nunca vira plural nem muda para feminino.'},
+ {f:'Sessão, seção ou cessão?',b:'<b>Sessão</b> = tempo (cinema). <b>Seção</b> = parte (da loja). <b>Cessão</b> = ceder.'},
+ {f:'“para atrás” está errado',b:'Com de/para/por usa-se <b>trás</b>: “olhou <b>para trás</b>”. <b>Atrás</b> fica sozinho: “atrás do sofá”.'}
+];
+
+/* ===================== RADAR ===================== */
+var RADAR=[
+ {f:'______ você chegou tarde?',o:['Por que','Porque'],a:0,e:'Começo de pergunta: Por que (separado, sem acento).'},
+ {f:'Não saí ______ estava chovendo.',o:['por que','porque'],a:1,e:'Resposta/explicação: porque (junto, sem acento).'},
+ {f:'Ninguém entendeu o ______ da briga.',o:['porquê','por quê'],a:0,e:'Depois do artigo “o”: porquê (junto e com acento) = o motivo.'},
+ {f:'Eles ______ muitos livros em casa.',o:['tem','têm'],a:1,e:'Eles (plural) = têm, com o chapeuzinho ^.'},
+ {f:'Minha avó sempre ______ nos visitar.',o:['vem','vêm'],a:0,e:'Uma pessoa (ela) = vem, sem acento.'},
+ {f:'Assistimos à ______ das 20h no cinema.',o:['sessão','seção'],a:0,e:'Tempo de um espetáculo = sessão.'},
+ {f:'As canetas ficam na ______ de papelaria.',o:['sessão','seção'],a:1,e:'Parte/divisão da loja = seção.'},
+ {f:'O carteiro ______ as cartas de manhã.',o:['traz','trás'],a:0,e:'Verbo trazer, com Z: ele traz.'},
+ {f:'O menino escondeu a bola ______ da porta.',o:['trás','atrás'],a:1,e:'Lugar, sem preposição = atrás.'},
+ {f:'Ela deu um passo para ______.',o:['trás','atrás'],a:0,e:'Com a preposição “para” = trás (com S).'},
+ {f:'O ______ da sala é de 6 metros.',o:['cumprimento','comprimento'],a:1,e:'Medida, tamanho = comprimento.'},
+ {f:'Estudei, ______ não consegui terminar.',o:['mas','mais'],a:0,e:'Oposição = mas (o mesmo que porém).'}
+];
+
+/* ===================== TREINO ===================== */
+var TREINO=[
+ {fam:'Adjetivo e grau',em:'⭐',qs:[
+  {n:'f',q:'Qual palavra está no grau superlativo?',o:['mais rápido','rapidíssimo','menos rápido','tão rápido quanto'],a:1,e:'O superlativo aumenta muito a qualidade: rápido → rapidíssimo.'},
+  {n:'m',q:'“A sala está menos limpa que a cozinha.” Esse é o grau comparativo de...',o:['igualdade','superioridade','inferioridade','superlativo'],a:2,e:'“Menos... que” é o comparativo de inferioridade.'},
+  {n:'p',q:'Qual é o adjetivo que vem da locução “de família”?',o:['familiar','familiarmente','família','familiado'],a:0,e:'Festa de família → festa familiar. Outros: de dentista → dentária; da cidade → urbana.'},
+  {n:'p',q:'Qual palavra é um adjetivo pátrio?',o:['limpíssima','paulista','cansado','rapidamente'],a:1,e:'Adjetivo pátrio indica o lugar de origem: paulista, brasileiro, mineiro.'}
+ ]},
+ {fam:'Verbos: modos, conjugações e gerúndio',em:'🎭',qs:[
+  {n:'f',q:'Qual é a terminação dos verbos no gerúndio?',o:['-ão','-ndo','-ou','-inho'],a:1,e:'O gerúndio termina sempre em -ndo: cantando, correndo, partindo.'},
+  {n:'f',q:'O verbo “correr” pertence a qual conjugação?',o:['1ª (-ar)','2ª (-er)','3ª (-ir)','nenhuma'],a:1,e:'Correr termina em -er: 2ª conjugação.'},
+  {n:'m',q:'Em qual frase o verbo está no modo subjuntivo?',o:['“Eu viajei nas férias passadas.”','“Eu viajo todo fim de semana.”','“Talvez eu viaje nas férias.”','“Eu viajarei amanhã.”'],a:2,e:'“Talvez” indica dúvida: modo subjuntivo (viaje).'},
+  {n:'p',q:'“Quando eu chegar, aviso você.” A forma “chegar” está no...',o:['subjuntivo, porque ainda não é certo','indicativo, porque é certeza do presente','gerúndio','imperativo'],a:0,e:'“Quando” é pista de subjuntivo: expressa algo que ainda não aconteceu.'},
+  {n:'p',q:'Qual frase corrige o gerundismo “Vamos estar analisando o seu caso”?',o:['Vamos estar analisado o seu caso.','Vamos analisar o seu caso.','Estaremos estar analisando o seu caso.','Vamos estar análise do seu caso.'],a:1,e:'O certo é o verbo simples: “vamos analisar”.'}
+ ]},
+ {fam:'Conjunções',em:'🔗',qs:[
+  {n:'f',q:'Qual conjunção mostra ideia de adição (soma)?',o:['e','mas','porque','portanto'],a:0,e:'A conjunção “e” soma informações. “Nem” também é de adição.'},
+  {n:'m',q:'“Saí quando a chuva passou.” A conjunção “quando” indica...',o:['oposição','tempo','conclusão','finalidade'],a:1,e:'Quando, assim que, antes que e depois que indicam tempo.'},
+  {n:'p',q:'“Estava cansado, portanto fui dormir.” A ideia é de...',o:['causa','alternância','conclusão','adição'],a:2,e:'Logo, por isso, portanto e assim indicam conclusão.'},
+  {n:'p',q:'Qual frase usa uma conjunção de finalidade (objetivo)?',o:['Estudou para que passasse na prova.','Estudei, mas não passei.','Não fui porque chovia.','Ora chora, ora ri.'],a:0,e:'Para, para que e a fim de que indicam finalidade.'}
+ ]},
+ {fam:'Advérbio e locução adverbial',em:'🧭',qs:[
+  {n:'f',q:'Em “Ele mora aqui”, a palavra “aqui” é advérbio de...',o:['tempo','lugar','modo','intensidade'],a:1,e:'Aqui, ali e longe indicam lugar.'},
+  {n:'m',q:'O que quer dizer que o advérbio é invariável?',o:['Que ele muda conforme o gênero','Que ele sempre vira plural','Que ele não muda de forma','Que ele só existe no passado'],a:2,e:'Invariável = fica sempre igual, sem feminino, masculino nem plural.'},
+  {n:'p',q:'Qual expressão é uma locução adverbial com o sentido de “diariamente”?',o:['com certeza','todo dia','de verdade','muito longe'],a:1,e:'“Todo dia” equivale ao advérbio diariamente.'},
+  {n:'p',q:'Em “Ele certamente gosta de estudar”, o advérbio “certamente” é de...',o:['afirmação','negação','lugar','modo'],a:0,e:'Certamente indica afirmação. “Não” indicaria negação.'}
+ ]},
+ {fam:'Pares confusos (ortografia)',em:'👯',qs:[
+  {n:'f',q:'Complete: “Ela olhou para ______.”',o:['traz','trás','atrás','tras'],a:1,e:'Com a preposição “para” usa-se trás (com S).'},
+  {n:'f',q:'Complete: “Não fui à escola ______ estava doente.”',o:['por que','porque','por quê','porquê'],a:1,e:'Resposta/explicação: porque (junto, sem acento).'},
+  {n:'m',q:'Complete: “A ______ do terreno foi assinada pelos donos.”',o:['sessão','seção','cessão','seção'],a:2,e:'Ato de ceder, de transferir = cessão.'},
+  {n:'m',q:'Qual frase está CORRETA?',o:['O menino vêm brincar.','Os pássaros vem cantar.','As meninas vêm estudar juntas.','As meninas vem estudar juntas.'],a:2,e:'Plural (elas) = vêm, com acento. Singular (ele) = vem.'},
+  {n:'p',q:'Complete: “Ele me deu um ______ muito simpático na porta.”',o:['comprimento','cumprimento','comprimente','cumprimente'],a:1,e:'Saudação = cumprimento. Medida = comprimento.'},
+  {n:'p',q:'Qual frase está TODA correta?',o:['Os artistas tem talento e vem ao circo.','Os artistas têm talento e vêm ao circo.','Os artista têm talento e vêm ao circo.','Os artistas têm talento e vem ao circo.'],a:1,e:'Plural: têm e vêm (com acento), e “artistas” no plural.'}
+ ]},
+ {fam:'Gêneros textuais',em:'📚',qs:[
+  {n:'f',q:'No poema, cada linha se chama...',o:['estrofe','verso','rima','parágrafo'],a:1,e:'Cada linha é um verso; um conjunto de versos forma uma estrofe.'},
+  {n:'f',q:'Como costuma ser a linguagem de uma crônica?',o:['simples e informal','muito técnica','formal e difícil','toda em outra língua'],a:0,e:'A crônica tem linguagem simples e informal.'},
+  {n:'m',q:'Um mito é escrito em que pessoa?',o:['1ª pessoa (eu)','2ª pessoa (tu)','3ª pessoa (ele/ela)','não tem pessoa'],a:2,e:'O mito é narrativo, em 3ª pessoa, simbólico e com elementos fantásticos.'},
+  {n:'p',q:'Qual é uma característica do regulamento?',o:['parágrafos numerados e linguagem formal','rimas no fim dos versos','elementos fantásticos e deuses','opinião do autor sobre tema polêmico'],a:0,e:'Regulamento: linguagem formal, 3ª pessoa, parágrafos numerados e frases que começam com verbos.'},
+  {n:'p',q:'Uma crônica pode ter caráter...',o:['apenas humorístico','humorístico, crítico, reflexivo ou irônico','somente de terror','apenas de instruções'],a:1,e:'A crônica pode ser humorística, crítica, reflexiva ou irônica.'}
+ ]}
+];
+
+/* ===================== SIMULADO (20) ===================== */
+var SIMULADO=[
+ {q:'Em “Ele não só estuda, mas também trabalha”, a conjunção destacada indica ideia de...',o:['adição (soma)','oposição','conclusão','tempo'],a:0,e:'“Não só... mas também” é da família da adição (soma).'},
+ {q:'Complete: “Você não quis ir ao passeio ______?”',o:['por que','porque','por quê','porquê'],a:2,e:'No FIM da pergunta usa-se por quê (separado e com acento).'},
+ {q:'Qual frase está no modo imperativo?',o:['Eu venho amanhã.','Tomara que ele venha.','Se ele viesse, eu iria.','Venha logo, por favor!'],a:3,e:'Imperativo = ordem ou pedido: “Venha logo, por favor!”.'},
+ {q:'O verbo “falar” pertence a qual conjugação?',o:['3ª (-ir)','2ª (-er)','1ª (-ar)','nenhuma'],a:2,e:'Falar termina em -ar: 1ª conjugação.'},
+ {q:'Qual palavra está no gerúndio?',o:['cantará','cantando','cantou','cantinho'],a:1,e:'O gerúndio termina em -ndo: cantando.'},
+ {q:'Em “Ele estuda muito para a prova”, a palavra “muito” é advérbio de...',o:['tempo','lugar','intensidade','negação'],a:2,e:'“Muito” indica intensidade.'},
+ {q:'Complete: “As crianças ______ medo de trovão.”',o:['tem','têm','tém','têem'],a:1,e:'As crianças (plural) = têm, com acento circunflexo.'},
+ {q:'Complete: “Perdemos a ______ das 16h no cinema!”',o:['seção','cessão','sesão','sessão'],a:3,e:'Tempo de um espetáculo = sessão.'},
+ {q:'Complete: “O gato dorme ______ do sofá.”',o:['trás','atrás','traz','tras'],a:1,e:'Lugar, sem preposição = atrás.'},
+ {q:'A frase “A girafa é mais alta que a zebra” mostra o grau...',o:['comparativo de superioridade','comparativo de igualdade','comparativo de inferioridade','superlativo'],a:0,e:'“Mais... que” é o comparativo de superioridade.'},
+ {q:'Qual é o superlativo de “limpa”?',o:['mais limpa','menos limpa','limpíssima','tão limpa quanto'],a:2,e:'Terminação -íssima = superlativo: limpíssima.'},
+ {q:'Para que serve um mito?',o:['Para vender um produto','Para dar uma ordem','Para ensinar uma receita','Para explicar algo usando uma história'],a:3,e:'O mito explica a origem do mundo, da natureza e das características humanas por meio de uma história.'},
+ {q:'O mito de Héstia, lido na Unidade 6, tem origem...',o:['brasileira','grega','chinesa','africana'],a:1,e:'O mito de Héstia é de origem grega, ligado ao fogo e ao lar.'},
+ {q:'Qual é o objetivo principal do artigo de opinião?',o:['Contar uma história de fadas','Expor um ponto de vista e convencer com argumentos','Listar ingredientes','Narrar um mito'],a:1,e:'O artigo de opinião expõe um ponto de vista sobre tema polêmico, com argumentos.'},
+ {q:'Sobre a rima no poema, é correto dizer que...',o:['todo poema precisa rimar','nenhum poema tem rima','nem todo poema precisa rimar','rima é o mesmo que estrofe'],a:2,e:'A rima são sons parecidos no fim dos versos, mas nem todo poema rima.'},
+ {q:'Qual destas frases é um exemplo de gerundismo?',o:['Estou lendo um livro muito legal.','Vamos estar entrando em contato.','Havia pessoas dançando na festa.','A cigarra leva a vida cantando.'],a:1,e:'“Vamos estar entrando” é gerundismo; o certo é “vamos entrar”.'},
+ {q:'Em “Talvez chova amanhã”, o verbo está no modo...',o:['indicativo','imperativo','infinitivo','subjuntivo'],a:3,e:'“Talvez” é pista de dúvida: modo subjuntivo.'},
+ {q:'Complete: “O ______ do tecido é de dois metros.”',o:['cumprimento','comprimento','cumprimente','comprimente'],a:1,e:'Medida, tamanho = comprimento (parônimo de cumprimento).'},
+ {q:'Qual expressão é uma locução adverbial?',o:['certamente','rapidamente','com certeza','cedo'],a:2,e:'Locução adverbial = duas ou mais palavras com valor de advérbio: “com certeza” = certamente.'},
+ {q:'Qual afirmação sobre a crônica é CORRETA?',o:['Fala de fatos simples do dia a dia, em linguagem informal.','É um texto científico cheio de termos técnicos.','Serve para explicar a origem do mundo.','Tem parágrafos numerados e linguagem formal.'],a:0,e:'A crônica é curta, informal e trata do cotidiano. As outras descrevem texto científico, mito e regulamento.'}
+];
+
+/* ===================== NAVEGAÇÃO ===================== */
+function aba(id,btn){
+  var s=document.querySelectorAll('section');
+  for(var i=0;i<s.length;i++)s[i].classList.remove('on');
+  document.getElementById(id).classList.add('on');
+  var b=document.querySelectorAll('nav button');
+  for(var j=0;j<b.length;j++)b[j].classList.remove('on');
+  btn.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===================== RENDER GENÉRICO DE QUESTÃO ===================== */
+var LET=['A','B','C','D'];
+function htmlQuestao(pre,i,q){
+  var opts='';
+  for(var k=0;k<q.o.length;k++){
+    opts+='<button class="opt" id="'+pre+'_o'+i+'_'+k+'" onclick="responder(\''+pre+'\','+i+','+k+')">'+
+          '<span class="letra">'+LET[k]+')</span> '+q.o[k]+'</button>';
+  }
+  return '<div class="q" id="'+pre+'_q'+i+'">'+
+         '<div class="enun">'+(i+1)+') '+q.q+'</div>'+
+         '<div class="opts">'+opts+'</div>'+
+         '<div id="'+pre+'_fb'+i+'"></div></div>';
+}
+var BANCOS={};
+function responder(pre,i,k){
+  var q=BANCOS[pre][i];
+  var cx=document.getElementById(pre+'_q'+i);
+  if(cx.dataset.feito)return;
+  cx.dataset.feito='1';
+  for(var z=0;z<q.o.length;z++){
+    var b=document.getElementById(pre+'_o'+i+'_'+z);
+    b.disabled=true;
+    if(z===q.a)b.classList.add('certa');
+  }
+  var ok=(k===q.a);
+  if(!ok)document.getElementById(pre+'_o'+i+'_'+k).classList.add('errada');
+  var fb=document.getElementById(pre+'_fb'+i);
+  fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML=(ok?'✅ Isso! ':'❌ Quase! ')+q.e;
+  mem[pre+'_'+i]={k:k,ok:ok};
+  salvar();
+  if(pre==='termo')termoCheck();
+  if(pre.indexOf('tr')===0)treinoCheck();
+}
+
+/* ===================== TERMÔMETRO ===================== */
+function montarTermo(){
+  BANCOS['termo']=TERMO;
+  var h='';
+  for(var i=0;i<TERMO.length;i++)h+=htmlQuestao('termo',i,TERMO[i]);
+  h+='<div class="center" style="margin-top:16px"><button class="btn sol" onclick="termoResultado()">🌡️ Ver a previsão</button></div>';
+  document.getElementById('termoBox').innerHTML=h;
+  for(var j=0;j<TERMO.length;j++){
+    var s=mem['termo_'+j];
+    if(s)responderRestaurado('termo',j,s.k);
+  }
+  termoCheck();
+}
+function responderRestaurado(pre,i,k){
+  var q=BANCOS[pre][i];
+  var cx=document.getElementById(pre+'_q'+i);
+  if(!cx||cx.dataset.feito)return;
+  cx.dataset.feito='1';
+  for(var z=0;z<q.o.length;z++){
+    var b=document.getElementById(pre+'_o'+i+'_'+z);
+    b.disabled=true;
+    if(z===q.a)b.classList.add('certa');
+  }
+  var ok=(k===q.a);
+  if(!ok)document.getElementById(pre+'_o'+i+'_'+k).classList.add('errada');
+  var fb=document.getElementById(pre+'_fb'+i);
+  fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML=(ok?'✅ Isso! ':'❌ Quase! ')+q.e;
+}
+function termoCheck(){
+  var n=0;
+  for(var i=0;i<TERMO.length;i++)if(mem['termo_'+i])n++;
+  if(n===TERMO.length)termoResultado(true);
+}
+function termoResultado(auto){
+  var falta=[],fracos=[],fortes=[];
+  for(var i=0;i<TERMO.length;i++){
+    var s=mem['termo_'+i];
+    if(!s){falta.push(i+1);continue;}
+    var nome=nomeAssunto(TERMO[i].as);
+    if(s.ok)fortes.push(nome);else fracos.push(nome);
+  }
+  var box=document.getElementById('termoRes');
+  box.classList.add('on');
+  if(falta.length&&!auto){
+    box.innerHTML='<h2>🌡️ Falta responder</h2><p>Ainda faltam as questões: <b>'+falta.join(', ')+'</b>. Responda todas para eu fechar a previsão!</p>';
+    return;
+  }
+  if(falta.length)return;
+  var h='<h2>🌦️ Previsão do tempo para a sua prova</h2>';
+  h+='<p>Você acertou <b>'+fortes.length+' de '+TERMO.length+'</b> assuntos.</p>';
+  h+='<div class="barra"><div style="width:'+Math.round(fortes.length/TERMO.length*100)+'%"></div></div>';
+  if(fracos.length){
+    h+='<h3>⚠️ Comece por estes — aqui está chovendo</h3>';
+    for(var f=0;f<fracos.length;f++)h+='<div class="termo-linha"><span class="nome">'+fracos[f]+'</span><span class="tag at">estudar primeiro</span></div>';
+    h+='<p style="margin-top:12px"><b>Seu caminho de hoje:</b> abra a aba <b>☀️ Previsão Fácil</b> e leia primeiro as pílulas marcadas com ⚠️. Depois vá ao <b>⛈️ Alerta</b>, ao <b>🎯 Treino</b> e termine no <b>📋 Boletim Final</b>.</p>';
+  } else {
+    h+='<div class="fb ok"><b>Sol em todos os assuntos!</b> 🌞 Você acertou os 13. Então hoje o melhor é treinar: vá direto ao <b>⛈️ Alerta</b> (as pegadinhas derrubam quem sabe a matéria) e depois ao <b>📋 Boletim Final</b>.</div>';
+  }
+  if(fortes.length){
+    h+='<h3>🌞 Já está firme nestes</h3>';
+    for(var g=0;g<fortes.length;g++)h+='<div class="termo-linha"><span class="nome">'+fortes[g]+'</span><span class="tag ok">só dar uma olhada</span></div>';
+  }
+  box.innerHTML=h;
+  mem.termo_fracos=fracos;
+  salvar();
+  montarPrevisao();
+}
+function nomeAssunto(id){
+  for(var i=0;i<ASSUNTOS.length;i++)if(ASSUNTOS[i].id===id)return ASSUNTOS[i].nome;
+  return id;
+}
+
+/* ===================== PREVISÃO ===================== */
+function montarPrevisao(){
+  var fracos=mem.termo_fracos||[];
+  var h='';
+  for(var i=0;i<PREVISAO.length;i++){
+    var p=PREVISAO[i];
+    if(p.g){h+='<div class="grupo">'+p.g+'</div>';continue;}
+    var alerta=(fracos.indexOf(nomeAssunto(p.as))>=0);
+    h+='<div class="pill card"'+(alerta?' style="border-color:#FF7043"':'')+'>'+
+       '<div class="tema">'+p.em+' '+p.t+(alerta?' <span class="tag at">⚠️ estude primeiro</span>':'')+'</div>'+
+       '<div class="regra">'+p.r+'</div>'+
+       '<div class="ex">📌 <b>Exemplos:</b> '+p.ex+'</div>'+
+       '<div class="prova">🎯 <b>Como costuma cair na prova:</b> '+p.p+'</div>'+
+       '</div>';
+  }
+  document.getElementById('previsaoBox').innerHTML=h;
+}
+
+/* ===================== ALERTA (flip) ===================== */
+function montarFlip(){
+  var h='';
+  for(var i=0;i<PEGADINHAS.length;i++){
+    h+='<div class="flip" onclick="this.classList.toggle(\'v\')">'+
+       '<div class="in"><div class="f">⚠️ '+PEGADINHAS[i].f+'<small>clique para virar</small></div>'+
+       '<div class="b">'+PEGADINHAS[i].b+'</div></div></div>';
+  }
+  document.getElementById('flipBox').innerHTML=h;
+}
+
+/* ===================== RADAR ===================== */
+var rOrdem=[],rPos=0,rAcertos=0;
+function radarStart(){
+  rOrdem=[];
+  for(var i=0;i<RADAR.length;i++)rOrdem.push(i);
+  for(var j=rOrdem.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1));var t=rOrdem[j];rOrdem[j]=rOrdem[k];rOrdem[k]=t;}
+  rPos=0;rAcertos=0;
+  radarMostrar();
+}
+function radarMostrar(){
+  var box=document.getElementById('radarBox');
+  if(rPos>=rOrdem.length){
+    var msg=(rAcertos===RADAR.length)?'🏆 Dez em dez... quer dizer, '+RADAR.length+' de '+RADAR.length+'! Radar limpo!':
+            (rAcertos>=RADAR.length-2)?'👏 Quase tudo! Jogue mais uma vez para fechar.':
+            '💪 Vale jogar de novo — a ordem muda e o cérebro aprende com a repetição.';
+    box.innerHTML='<div class="fb ok"><b>Rodada terminada:</b> '+rAcertos+' de '+RADAR.length+' certas.<br>'+msg+'</div>';
+    document.getElementById('radarPlacar').textContent='';
+    var melhor=mem.radar_melhor||0;
+    if(rAcertos>melhor){mem.radar_melhor=rAcertos;salvar();}
+    return;
+  }
+  var it=RADAR[rOrdem[rPos]];
+  var ops='';
+  for(var k=0;k<it.o.length;k++)ops+='<button class="btn ghost" onclick="radarResp('+k+')">'+it.o[k]+'</button>';
+  box.innerHTML='<div class="frase">'+it.f+'</div><div class="escolhas">'+ops+'</div><div id="radarFb"></div>';
+  document.getElementById('radarPlacar').textContent='Rodada '+(rPos+1)+' de '+rOrdem.length+' · acertos: '+rAcertos;
+}
+function radarResp(k){
+  var it=RADAR[rOrdem[rPos]];
+  var ok=(k===it.a);
+  if(ok)rAcertos++;
+  var fb=document.getElementById('radarFb');
+  fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML=(ok?'✅ Certo! ':'❌ A certa era <b>'+it.o[it.a]+'</b>. ')+it.e;
+  var bts=document.querySelectorAll('#radarBox .escolhas button');
+  for(var i=0;i<bts.length;i++)bts[i].disabled=true;
+  rPos++;
+  setTimeout(radarMostrar,1700);
+}
+
+/* ===================== TREINO ===================== */
+function montarTreino(){
+  var h='';
+  for(var f=0;f<TREINO.length;f++){
+    var fam=TREINO[f];
+    var pre='tr'+f;
+    BANCOS[pre]=fam.qs;
+    h+='<div class="card"><h2>'+fam.em+' '+fam.fam+'</h2><div id="'+pre+'Box"></div>'+
+       '<div class="placar" id="'+pre+'Placar"></div></div>';
+  }
+  document.getElementById('treinoBox').innerHTML=h;
+  for(var g=0;g<TREINO.length;g++){
+    var p2='tr'+g, hh='';
+    for(var i=0;i<TREINO[g].qs.length;i++){
+      var q=TREINO[g].qs[i];
+      hh+=htmlQuestao(p2,i,q).replace('</div><div class="opts">',
+          ' <span class="nivel '+q.n+'">'+(q.n==='f'?'fácil':q.n==='m'?'médio':'nível prova')+'</span></div><div class="opts">');
+    }
+    document.getElementById(p2+'Box').innerHTML=hh;
+    for(var r=0;r<TREINO[g].qs.length;r++){
+      var s=mem[p2+'_'+r];
+      if(s)responderRestaurado(p2,r,s.k);
+    }
+  }
+  treinoCheck();
+}
+function treinoCheck(){
+  for(var f=0;f<TREINO.length;f++){
+    var pre='tr'+f,tot=TREINO[f].qs.length,fez=0,ac=0;
+    for(var i=0;i<tot;i++){var s=mem[pre+'_'+i];if(s){fez++;if(s.ok)ac++;}}
+    var el=document.getElementById(pre+'Placar');
+    if(el)el.textContent=fez?('Respondidas: '+fez+'/'+tot+' · acertos: '+ac):'';
+  }
+}
+
+/* ===================== SIMULADO ===================== */
+var simEscolhas={};
+function montarSim(){
+  var h='';
+  for(var i=0;i<SIMULADO.length;i++){
+    var q=SIMULADO[i],ops='';
+    for(var k=0;k<q.o.length;k++){
+      ops+='<button class="opt" id="sim_o'+i+'_'+k+'" onclick="simMarcar('+i+','+k+')">'+
+           '<span class="letra">'+LET[k]+')</span> '+q.o[k]+'</button>';
+    }
+    h+='<div class="q" id="sim_q'+i+'"><div class="enun">'+(i+1)+') '+q.q+'</div>'+
+       '<div class="opts">'+ops+'</div><div id="sim_fb'+i+'"></div></div>';
+  }
+  document.getElementById('simBox').innerHTML=h;
+  var sv=mem.sim_escolhas;
+  if(sv){simEscolhas=sv;for(var j in simEscolhas)marcarVisual(parseInt(j,10),simEscolhas[j]);}
+  if(mem.sim_enviado)simMostrarGabarito();
+}
+function marcarVisual(i,k){
+  for(var z=0;z<SIMULADO[i].o.length;z++){
+    var b=document.getElementById('sim_o'+i+'_'+z);
+    if(b)b.style.borderColor=(z===k)?'#2E86C1':'';
+    if(b)b.style.background=(z===k)?'#E7F3FB':'';
+  }
+}
+function simMarcar(i,k){
+  if(mem.sim_enviado)return;
+  simEscolhas[i]=k;
+  mem.sim_escolhas=simEscolhas;
+  salvar();
+  marcarVisual(i,k);
+}
+function simEnviar(){
+  var falta=[];
+  for(var i=0;i<SIMULADO.length;i++)if(simEscolhas[i]===undefined)falta.push(i+1);
+  var box=document.getElementById('simRes');
+  box.classList.add('on');
+  if(falta.length){
+    box.innerHTML='<h2>📋 Ainda falta marcar</h2><p>Faltam as questões: <b>'+falta.join(', ')+'</b>. Marque todas antes de enviar.</p>';
+    window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+    return;
+  }
+  mem.sim_enviado=1;
+  salvar();
+  simMostrarGabarito();
+}
+function simMostrarGabarito(){
+  var ac=0;
+  for(var i=0;i<SIMULADO.length;i++){
+    var q=SIMULADO[i],esc=simEscolhas[i];
+    for(var z=0;z<q.o.length;z++){
+      var b=document.getElementById('sim_o'+i+'_'+z);
+      if(!b)continue;
+      b.disabled=true;b.style.borderColor='';b.style.background='';
+      if(z===q.a)b.classList.add('certa');
+      if(z===esc&&esc!==q.a)b.classList.add('errada');
+    }
+    var ok=(esc===q.a);
+    if(ok)ac++;
+    var fb=document.getElementById('sim_fb'+i);
+    if(fb){fb.className='fb '+(ok?'ok':'no');
+      fb.innerHTML=(ok?'✅ Certa! ':'❌ A resposta certa é <b>'+LET[q.a]+')</b> '+q.o[q.a]+'. ')+q.e;}
+  }
+  mem.sim_acertos=ac;salvar();
+  var pc=Math.round(ac/SIMULADO.length*100);
+  var rec=(pc>=90)?'🌞 Previsão de sol! Você está pronta para a recuperação. Antes de dormir, só vire os cartões do Alerta uma vez.':
+          (pc>=70)?'⛅ Tempo bom com nuvens. Volte à Previsão Fácil nos assuntos que você errou aqui e jogue o Radar de novo.':
+          (pc>=50)?'🌥️ Ainda tem nuvem. Releia as pílulas dos assuntos errados e refaça o Treino dessas famílias.':
+          '🌧️ Calma, dá tempo. Escolha os 4 assuntos que você mais errou, leia só as pílulas deles e jogue o Radar duas vezes.';
+  var box=document.getElementById('simRes');
+  box.innerHTML='<h2>📋 Seu boletim</h2><p style="font-size:1.3rem"><b>'+ac+' de '+SIMULADO.length+'</b> ('+pc+'%)</p>'+
+    '<div class="barra"><div style="width:'+pc+'%"></div></div><div class="fb ok">'+rec+'</div>'+
+    '<p class="aviso">O gabarito comentado de cada questão está acima, junto da pergunta.</p>';
+  document.getElementById('simBtn').style.display='none';
+  window.scrollTo({top:document.getElementById('simRes').offsetTop-40,behavior:'smooth'});
+}
+
+/* ===================== RELATÓRIO DOS PAIS ===================== */
+function verRelatorio(){
+  var cod=(document.getElementById('codPais').value||'').trim().toUpperCase();
+  var box=document.getElementById('relBox');
+  if(cod!=='PAIS-77'){
+    box.innerHTML='<div class="fb no">Código incorreto. Peça o código a quem montou o kit.</div>';
+    return;
+  }
+  var tFez=0,tAc=0;
+  for(var i=0;i<TERMO.length;i++){var s=mem['termo_'+i];if(s){tFez++;if(s.ok)tAc++;}}
+  var h='<div class="fb ok"><b>Relatório liberado.</b></div><table><tr><th>Parte</th><th>Situação</th></tr>';
+  h+='<tr><td>🌡️ Termômetro</td><td>'+(tFez?tAc+' de '+tFez+' respondidas corretas'+(tFez<TERMO.length?' (incompleto: '+tFez+'/'+TERMO.length+')':''):'não começou')+'</td></tr>';
+  var fr=mem.termo_fracos;
+  h+='<tr><td>⚠️ Assuntos a reforçar</td><td>'+(fr&&fr.length?fr.join(' · '):(fr?'nenhum — acertou todos':'depende do Termômetro'))+'</td></tr>';
+  h+='<tr><td>📡 Radar dos Parecidos</td><td>'+(mem.radar_melhor!==undefined?'melhor rodada: '+mem.radar_melhor+' de '+RADAR.length:'não jogou')+'</td></tr>';
+  for(var f=0;f<TREINO.length;f++){
+    var pre='tr'+f,tot=TREINO[f].qs.length,fez=0,ac=0;
+    for(var j=0;j<tot;j++){var s2=mem[pre+'_'+j];if(s2){fez++;if(s2.ok)ac++;}}
+    h+='<tr><td>🎯 Treino: '+TREINO[f].fam+'</td><td>'+(fez?ac+' certas de '+fez+' feitas (de '+tot+')':'não fez')+'</td></tr>';
+  }
+  h+='<tr><td>📋 Boletim Final</td><td>'+(mem.sim_enviado?mem.sim_acertos+' de '+SIMULADO.length+' ('+Math.round(mem.sim_acertos/SIMULADO.length*100)+'%)':'não enviou')+'</td></tr>';
+  h+='</table><p class="aviso" style="margin-top:10px">Dica para a véspera: priorize os assuntos da linha “a reforçar” e refaça o Radar — são os erros que mais custam nota.</p>';
+  box.innerHTML=h;
+}
+
+/* ===================== INICIAR ===================== */
+montarTermo();
+montarPrevisao();
+montarFlip();
+montarTreino();
+montarSim();
+radarStart();
+</script>
+</body>
+</html>
